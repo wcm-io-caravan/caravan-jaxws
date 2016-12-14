@@ -47,6 +47,18 @@
   <properties>
     <site.url.module.prefix>jaxws</site.url.module.prefix>
   </properties>
+  
+  <dependencyManagement>
+    <dependencies>
+
+      <dependency>
+        <groupId>io.wcm.osgi.wrapper</groupId>
+        <artifactId>io.wcm.osgi.wrapper.cxf</artifactId>
+        <version>3.1.9-0000-SNAPSHOT</version>
+      </dependency>
+
+    </dependencies>
+  </dependencyManagement>
 
   <distributionManagement>
     <site>
