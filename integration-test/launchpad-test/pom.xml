@@ -252,6 +252,14 @@
             </server>
           </servers>
         </configuration>
+        <dependencies>
+          <!-- Switch back to old configadmin style to produce old configuration format -->
+          <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.configadmin</artifactId>
+            <version>1.8.4</version>
+          </dependency>
+        </dependencies>
       </plugin>
 
       <!-- do not deploy this pom into maven repository -->
