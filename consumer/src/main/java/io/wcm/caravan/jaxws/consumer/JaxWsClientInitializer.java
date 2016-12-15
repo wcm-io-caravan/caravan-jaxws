@@ -495,8 +495,8 @@ public class JaxWsClientInitializer {
    * Create TLS client parameters based on given certstore path/password parameters.
    * Caches the parameter in member variable of this factory.
    * @return TLS client parameters
-   * @throws IOException
-   * @throws GeneralSecurityException
+   * @throws IOException I/O exception
+   * @throws GeneralSecurityException General security exception
    */
   public final TLSClientParameters getTLSClientParameters() throws IOException, GeneralSecurityException {
     if (tlsClientParameters == null) {

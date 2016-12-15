@@ -18,7 +18,7 @@
  * #L%
  */
 /**
- * JAX-WS Consumer
+ * JAX-WS Consumer HTTP Client
  */
 @org.osgi.annotation.versioning.Version("1.0.0")
-package io.wcm.caravan.jaxws.consumer;
+package io.wcm.caravan.jaxws.consumer.httpclient;

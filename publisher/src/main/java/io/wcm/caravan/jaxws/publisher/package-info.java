@@ -18,7 +18,7 @@
  * #L%
  */
 /**
- * CXF server (SOAP producer)
+ * JAX-WS Publisher
  */
 @org.osgi.annotation.versioning.Version("1.0.0")
 package io.wcm.caravan.jaxws.publisher;
