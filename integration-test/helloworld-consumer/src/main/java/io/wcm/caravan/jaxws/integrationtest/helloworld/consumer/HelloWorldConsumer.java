@@ -19,15 +19,14 @@
  */
 package io.wcm.caravan.jaxws.integrationtest.helloworld.consumer;
 
-import java.io.IOException;
-
 import org.apache.hello_world_soap_http.Greeter;
 import org.apache.hello_world_soap_http.PingMeFault;
-import org.osgi.service.cm.Configuration;
-import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.metatype.annotations.AttributeDefinition;
+import org.osgi.service.metatype.annotations.Designate;
+import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
 import io.wcm.caravan.jaxws.consumer.JaxWsClientFactoryService;
 
@@ -35,30 +34,23 @@ import io.wcm.caravan.jaxws.consumer.JaxWsClientFactoryService;
  * Hello World SOAP Client.
  */
 @Component(service = HelloWorldConsumer.class)
+@Designate(ocd = HelloWorldConsumer.Config.class)
 public class HelloWorldConsumer {
+
+  @ObjectClassDefinition(name = "Hello World SOAP Client")
+  @interface Config {
+    @AttributeDefinition(description = "Soap Service URL")
+    String soapServiceUrl();
+  }
 
   @Reference
   private JaxWsClientFactoryService jaxWsClientFactoryService;
-  @Reference
-  private ConfigurationAdmin configAdmin;
 
   private Greeter greeterClient;
 
   @Activate
-  private void activate() throws IOException {
-    String url = "http://localhost:" + getPortNumberFromHttpService() + "/helloWorldService";
-    greeterClient = jaxWsClientFactoryService.create(Greeter.class, url);
-  }
-
-  private int getPortNumberFromHttpService() throws IOException {
-    Configuration config = configAdmin.getConfiguration("org.apache.felix.http");
-    if (config != null) {
-      Object port = config.getProperties().get("org.osgi.service.http.port");
-      if (port != null) {
-        return (Integer)port;
-      }
-    }
-    return 0;
+  private void activate(Config config) {
+    greeterClient = jaxWsClientFactoryService.create(Greeter.class, config.soapServiceUrl());
   }
 
   /**
