@@ -27,46 +27,37 @@ import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleEvent;
 import org.osgi.framework.BundleListener;
-import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 
-import io.wcm.caravan.jaxws.consumer.DefaultJaxWsClientInitializer;
-import io.wcm.caravan.jaxws.consumer.JaxWsClientFactoryService;
+import io.wcm.caravan.jaxws.consumer.JaxWsClientFactory;
 import io.wcm.caravan.jaxws.consumer.JaxWsClientInitializer;
 
 /**
  * Factory for creating initializing JAX-WS SOAP clients.
  */
-@Component(immediate = true, service = JaxWsClientFactoryService.class)
-public final class JaxWsClientFactoryServiceImpl implements JaxWsClientFactoryService, BundleListener {
+@Component(immediate = true, service = JaxWsClientFactory.class)
+public final class JaxWsClientFactoryImpl implements JaxWsClientFactory, BundleListener {
 
   // cache proxy factor beans per port class/url and initializer class
   private ConcurrentHashMap<String, ConcurrentHashMap<JaxWsClientInitializer, Object>> cacheMap;
 
   @Activate
   protected void activate(BundleContext bundleContext) {
-
-    // register as bundle listener
     bundleContext.addBundleListener(this);
-
     cacheMap = new ConcurrentHashMap<String, ConcurrentHashMap<JaxWsClientInitializer, Object>>();
   }
 
   @Deactivate
-  protected void deactivate(ComponentContext osgiContext) {
+  protected void deactivate(BundleContext bundleContext) {
+    bundleContext.removeBundleListener(this);
     cacheMap = null;
   }
 
   @Override
   public <T> T create(Class<T> clazz, String portUrl) {
-    return create(clazz, portUrl, new DefaultJaxWsClientInitializer());
-  }
-
-  @Override
-  public <T> T create(Class<T> clazz, String portUrl, String username, String password) {
-    return create(clazz, portUrl, new DefaultJaxWsClientInitializer(username, password));
+    return create(clazz, portUrl, new JaxWsClientInitializer());
   }
 
   @Override

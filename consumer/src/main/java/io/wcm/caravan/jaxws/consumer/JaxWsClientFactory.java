@@ -27,7 +27,7 @@ import io.wcm.caravan.jaxws.consumer.impl.OsgiAwareClientImpl;
  * Factory for creating initializing JAX-WS SOAP clients.
  */
 @ProviderType
-public interface JaxWsClientFactoryService {
+public interface JaxWsClientFactory {
 
   /**
    * Create webservice port via JAXWS proxy factory.
@@ -41,21 +41,6 @@ public interface JaxWsClientFactoryService {
    * @return Port object
    */
   <T> T create(Class<T> clazz, String portUrl);
-
-  /**
-   * Create webservice port via JAXWS proxy factory.
-   * This method fixes numerous problems with 3rdparty libs used by CXF and CXF itself and classloader issues with OSGI.
-   * Using this method the initialization phase of JAXB mapping is wrapped in an OSGI-aware classloader.
-   * Furthermore each client instances is wrapped in an OSGI-aware subclass (see {@link OsgiAwareClientImpl}), which
-   * ensures that each invoke call on a webservice method is itself executed within an OSGI-aware classloader context.
-   * @param <T> Port class
-   * @param clazz Port class with JAXWS annotation
-   * @param portUrl Port url (this is not the WSDL location)
-   * @param username Outgoing authentication: username
-   * @param password Outgoing authentication: password
-   * @return Port object
-   */
-  <T> T create(Class<T> clazz, String portUrl, String username, String password);
 
   /**
    * Create webservice port via JAXWS proxy factory.

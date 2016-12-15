@@ -49,7 +49,7 @@ public abstract class AbstractJaxWsServer extends CXFNonSpringServlet {
   public static final String SOAP_EXTENSION = "soap";
 
   @Override
-  public void init(ServletConfig servletConfig) throws ServletException {
+  public final void init(ServletConfig servletConfig) throws ServletException {
     ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
     try {
       // set classloader to CXF bundle class loader to avoid OSGI classloader problems
@@ -64,6 +64,28 @@ public abstract class AbstractJaxWsServer extends CXFNonSpringServlet {
     finally {
       Thread.currentThread().setContextClassLoader(oldClassLoader);
     }
+  }
+
+  /**
+   * @return Servlet request for current threads SOAP request
+   */
+  protected final HttpServletRequest getCurrentRequest() {
+    RequestContext requestContext = RequestContext.getRequestContext();
+    if (requestContext == null) {
+      throw new IllegalStateException("No current soap request context available.");
+    }
+    return requestContext.getRequest();
+  }
+
+  /**
+   * @return Servlet response for current threads SOAP request
+   */
+  protected final HttpServletResponse getCurrentResponse() {
+    RequestContext requestContext = RequestContext.getRequestContext();
+    if (requestContext == null) {
+      throw new IllegalStateException("No current soap request context available.");
+    }
+    return requestContext.getResponse();
   }
 
   /**
@@ -94,28 +116,6 @@ public abstract class AbstractJaxWsServer extends CXFNonSpringServlet {
       Thread.currentThread().setContextClassLoader(oldClassLoader);
       RequestContext.getThreadLocal().remove();
     }
-  }
-
-  /**
-   * @return Servlet request for current threads SOAP request
-   */
-  protected HttpServletRequest getCurrentRequest() {
-    RequestContext requestContext = RequestContext.getRequestContext();
-    if (requestContext == null) {
-      throw new IllegalStateException("No current soap request context available.");
-    }
-    return requestContext.getRequest();
-  }
-
-  /**
-   * @return Servlet response for current threads SOAP request
-   */
-  protected HttpServletResponse getCurrentResponse() {
-    RequestContext requestContext = RequestContext.getRequestContext();
-    if (requestContext == null) {
-      throw new IllegalStateException("No current soap request context available.");
-    }
-    return requestContext.getResponse();
   }
 
   /**

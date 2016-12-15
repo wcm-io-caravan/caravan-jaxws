@@ -25,7 +25,7 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
-import io.wcm.caravan.jaxws.consumer.JaxWsClientFactoryService;
+import io.wcm.caravan.jaxws.consumer.JaxWsClientFactory;
 
 /**
  * Hello World SOAP Client.
@@ -34,14 +34,14 @@ import io.wcm.caravan.jaxws.consumer.JaxWsClientFactoryService;
 public class HelloWorldConsumer {
 
   @Reference
-  private JaxWsClientFactoryService jaxWsClientFactoryService;
+  private JaxWsClientFactory jaxWsClientFactory;
 
   private Greeter greeterClient;
 
   @Activate
   private void activate() {
     String url = System.getProperty("launchpad.http.server.url") + "/helloWorldService";
-    greeterClient = jaxWsClientFactoryService.create(Greeter.class, url);
+    greeterClient = jaxWsClientFactory.create(Greeter.class, url);
   }
 
   /**
