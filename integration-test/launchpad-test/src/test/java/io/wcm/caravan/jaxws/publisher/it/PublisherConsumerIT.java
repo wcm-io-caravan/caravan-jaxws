@@ -19,6 +19,8 @@
  */
 package io.wcm.caravan.jaxws.publisher.it;
 
+import static org.junit.Assert.assertEquals;
+
 import org.apache.sling.junit.rules.TeleporterRule;
 import org.junit.Before;
 import org.junit.Rule;
@@ -41,6 +43,21 @@ public class PublisherConsumerIT {
   @Test
   public void testPing() {
     underTest.doPing();
+  }
+
+  @Test
+  public void testGreet() {
+    assertEquals("Hello World Publisher: jaxws-it", underTest.doGreet("jaxws-it"));
+  }
+
+  @Test
+  public void testGreetOneWay() {
+    underTest.doGreetOneWay("jaxws-it");
+  }
+
+  @Test
+  public void testSayHi() {
+    assertEquals("Hello World Publisher", underTest.doSayHi());
   }
 
 }
