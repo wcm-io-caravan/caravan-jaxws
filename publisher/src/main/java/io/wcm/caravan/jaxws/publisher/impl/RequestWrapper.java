@@ -37,19 +37,11 @@ public final class RequestWrapper extends HttpServletRequestWrapper {
   /**
    * @param request Request
    */
-  @SuppressWarnings("null")
   public RequestWrapper(HttpServletRequest request) {
     super(request);
 
-    // build virtual path from fixes path prefix, and suffix from sling URL (especially for JAX-RS REST addressing)
-    String suffix = null;
-    /* TODO: integrate with Sling API?
-    String suffix = ((SlingHttpServletRequest)pRequest).getRequestPathInfo().getSuffix();
-     */
     String queryString = request.getQueryString();
-    virtualPath = VIRTUAL_PATH
-        + (suffix != null ? suffix : "")
-        + (queryString != null ? "?" + queryString : "");
+    virtualPath = VIRTUAL_PATH + (queryString != null ? "?" + queryString : "");
   }
 
   @Override
@@ -64,7 +56,7 @@ public final class RequestWrapper extends HttpServletRequestWrapper {
 
   @Override
   public String getContextPath() {
-    // simulate default root even if AEM is running at another path
+    // simulate default root even if container is running at another path
     return "";
   }
 
