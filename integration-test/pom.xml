@@ -38,6 +38,7 @@
   <name>JAX-WS Integration Test</name>
 
   <modules>
+    <module>helloworld-proxy</module>
     <module>launchpad-test</module>
   </modules>
 

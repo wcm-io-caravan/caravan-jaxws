@@ -46,6 +46,7 @@
 
   <properties>
     <site.url.module.prefix>jaxws</site.url.module.prefix>
+    <apache-cxf-version>3.1.9</apache-cxf-version>
   </properties>
   
   <dependencyManagement>
@@ -54,11 +55,25 @@
       <dependency>
         <groupId>io.wcm.osgi.wrapper</groupId>
         <artifactId>io.wcm.osgi.wrapper.cxf</artifactId>
-        <version>3.1.9-0000-SNAPSHOT</version>
+        <version>${apache-cxf-version}-0000-SNAPSHOT</version>
       </dependency>
 
     </dependencies>
   </dependencyManagement>
+  
+  <build>
+    <pluginManagement>
+      <plugins>
+
+        <plugin>
+          <groupId>org.apache.cxf</groupId>
+          <artifactId>cxf-codegen-plugin</artifactId>
+          <version>${apache-cxf-version}</version>
+        </plugin>
+        
+      </plugins>
+    </pluginManagement>
+  </build>
 
   <distributionManagement>
     <site>
