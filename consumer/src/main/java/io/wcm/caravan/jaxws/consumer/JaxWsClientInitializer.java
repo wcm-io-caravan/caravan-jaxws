@@ -22,6 +22,8 @@ package io.wcm.caravan.jaxws.consumer;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.TrustManagerFactory;
 import javax.xml.ws.BindingProvider;
 
 import org.apache.commons.lang3.StringUtils;
@@ -47,6 +49,7 @@ import org.apache.cxf.ws.addressing.JAXWSAConstants;
 import org.apache.cxf.ws.addressing.WSAddressingFeature;
 import org.osgi.annotation.versioning.ConsumerType;
 
+import io.wcm.caravan.jaxws.consumer.impl.CertificateLoader;
 import io.wcm.caravan.jaxws.consumer.impl.OsgiAwareJaxWsClientFactoryBean;
 
 /**
@@ -65,24 +68,29 @@ public class JaxWsClientInitializer {
   public static final String[] SENSITIVE_PROPERTY_NAMES = new String[] {
       "proxyPassword",
       "certstorePassword",
-      "truststorePassword"
+      "trustStorePassword"
   };
 
-  private String username;
-  private String password;
-  private boolean ignoreUnexpectedElements;
-  private boolean allowChunking = true;
-  private String wsAdressingUrl;
-  private int timeoutConnection;
-  private int timeoutReceive;
+  private int connectTimeout;
+  private int socketTimeout;
+  private String httpUser;
+  private String httpPassword;
   private String proxyHost;
   private int proxyPort;
-  private String proxyUsername;
+  private String proxyUser;
   private String proxyPassword;
-  private String certstorePath;
-  private String certstorePassword;
-  private String truststorePath;
-  private String truststorePassword;
+  private String sslContextType = CertificateLoader.SSL_CONTEXT_TYPE_DEFAULT;
+  private String keyManagerType = CertificateLoader.KEY_MANAGER_TYPE_DEFAULT;
+  private String keyStoreType = CertificateLoader.KEY_STORE_TYPE_DEFAULT;
+  private String keyStorePath;
+  private String keyStorePassword;
+  private String trustManagerType = CertificateLoader.TRUST_MANAGER_TYPE_DEFAULT;
+  private String trustStoreType = CertificateLoader.TRUST_STORE_TYPE_DEFAULT;
+  private String trustStorePath;
+  private String trustStorePassword;
+  private String wsAddressingToUri;
+  private boolean ignoreUnexpectedElements;
+  private boolean allowChunking = true;
 
   private transient TLSClientParameters tlsClientParameters;
 
@@ -93,13 +101,13 @@ public class JaxWsClientInitializer {
   public void initializeFactory(JaxWsProxyFactoryBean factory) {
 
     // set outgoing security (username/password)
-    if (StringUtils.isNotEmpty(getUsername())) {
-      factory.setUsername(getUsername());
-      factory.setPassword(getPassword());
+    if (StringUtils.isNotEmpty(getHttpUser())) {
+      factory.setUsername(getHttpUser());
+      factory.setPassword(getHttpPassword());
     }
 
     // enable WS-addressing
-    if (StringUtils.isNotEmpty(getWSAdressingUrl())) {
+    if (StringUtils.isNotEmpty(getWSAddressingToUri())) {
       factory.getFeatures().add(new WSAddressingFeature());
     }
 
@@ -128,7 +136,7 @@ public class JaxWsClientInitializer {
       // see http://cxf.apache.org/faq.html#FAQ-AreJAXWSclientproxiesthreadsafe%3F
       ((BindingProvider)portObject).getRequestContext().put(JaxWsClientProxy.THREAD_LOCAL_REQUEST_CONTEXT, Boolean.TRUE);
 
-      // ignore unexpected elements and attributes on data binding (DVD-963)
+      // ignore unexpected elements and attributes on data binding
       if (isIgnoreUnexpectedElements()) {
         // disable schema validation to be upward-compatible to future IA schema changes
         ((BindingProvider)portObject).getRequestContext().put(JAXB_VALIDATION, false);
@@ -159,13 +167,13 @@ public class JaxWsClientInitializer {
   protected void initializeEndpointClient(Client endpointClient) {
 
     // set destination address for WS-addressing
-    if (StringUtils.isNotEmpty(getWSAdressingUrl())) {
+    if (StringUtils.isNotEmpty(getWSAddressingToUri())) {
       endpointClient.getOutInterceptors().add(new AbstractPhaseInterceptor<Message>(Phase.SETUP) {
 
         @Override
         public void handleMessage(Message pMessage) throws Fault {
           AttributedURIType uri = new AttributedURIType();
-          uri.setValue(getWSAdressingUrl());
+          uri.setValue(getWSAddressingToUri());
 
           AddressingProperties maps = new AddressingProperties();
           maps.setTo(uri);
@@ -176,7 +184,7 @@ public class JaxWsClientInitializer {
       });
     }
 
-    // add intercepteros
+    // add interceptors
     addInterceptors(endpointClient);
 
   }
@@ -199,11 +207,11 @@ public class JaxWsClientInitializer {
 
     HTTPClientPolicy clientPolicy = httpConduit.getClient();
     clientPolicy.setAllowChunking(isAllowChunking());
-    if (getTimeoutConnection() > 0) {
-      clientPolicy.setConnectionTimeout(getTimeoutConnection());
+    if (getConnectTimeout() > 0) {
+      clientPolicy.setConnectionTimeout(getConnectTimeout());
     }
-    if (getTimeoutReceive() > 0) {
-      clientPolicy.setReceiveTimeout(getTimeoutReceive());
+    if (getSocketTimeout() > 0) {
+      clientPolicy.setReceiveTimeout(getSocketTimeout());
     }
 
     // optionally enable proxy server
@@ -213,75 +221,19 @@ public class JaxWsClientInitializer {
       clientPolicy.setProxyServerPort(getProxyPort());
 
       // optionally define proxy authentication
-      if (StringUtils.isNotEmpty(getProxyUsername())) {
+      if (StringUtils.isNotEmpty(getProxyUser())) {
         ProxyAuthorizationPolicy proxyAuthentication = new ProxyAuthorizationPolicy();
-        proxyAuthentication.setUserName(getProxyUsername());
+        proxyAuthentication.setUserName(getProxyUser());
         proxyAuthentication.setPassword(getProxyPassword());
         httpConduit.setProxyAuthorization(proxyAuthentication);
       }
     }
 
     // setup TLS - enable certificate for WS access
-    if (StringUtils.isNotEmpty(getCertstorePath()) || StringUtils.isNotEmpty(getTruststorePath())) {
+    if (CertificateLoader.isSslKeyManagerEnabled(this) || CertificateLoader.isSslTrustStoreEnbaled(this)) {
       httpConduit.setTlsClientParameters(getTLSClientParameters());
     }
 
-  }
-
-  /**
-   * Create TLS client parameters based on given certstore path/password parameters.
-   * Caches the parameter in member variable of this factory.
-   * @return TLS client parameters
-   * @throws IOException
-   * @throws GeneralSecurityException
-   */
-  protected TLSClientParameters getTLSClientParameters() throws IOException, GeneralSecurityException {
-    if (tlsClientParameters == null) {
-      TLSClientParameters tlsCP = new TLSClientParameters();
-
-      /* TODO: integrate with certloader from commons.httpclient
-
-      // initialize certstore
-      if (StringUtils.isNotEmpty(getCertstorePath())) {
-        try {
-          KeyManagerFactory keyManagerFactory = CertificateLoader.getKeyManagerFactory(
-              getCertstorePath(),
-              getCertstorePassword(),
-              CertificateLoader.KEY_MANAGER_TYPE_DEFAULT,
-              CertificateLoader.KEY_STORE_TYPE_DEFAULT
-              );
-          tlsCP.setKeyManagers(keyManagerFactory.getKeyManagers());
-        }
-        catch (Throwable ex) {
-          throw new RuntimeException("Unable to initialize certificate store for SOAP endpoint.\n"
-              + "Please check configuration parameters 'certstorePath' and 'certstorePassword' in this config:\n"
-              + this.toString(), ex);
-        }
-      }
-
-      // initialize truststore
-      if (StringUtils.isNotEmpty(getTruststorePath())) {
-        try {
-          TrustManagerFactory trustManagerFactory = CertificateLoader.getTrustManagerFactory(
-              getTruststorePath(),
-              getTruststorePassword(),
-              CertificateLoader.TRUST_MANAGER_TYPE_DEFAULT,
-              CertificateLoader.TRUST_STORE_TYPE_DEFAULT
-              );
-          tlsCP.setTrustManagers(trustManagerFactory.getTrustManagers());
-        }
-        catch (Throwable ex) {
-          throw new RuntimeException("Unable to initialize trust store for SOAP endpoint.\n"
-              + "Please check configuration parameters 'truststorePath' and 'truststorePassword' in this config:\n"
-              + this.toString(), ex);
-        }
-      }
-
-       */
-
-      tlsClientParameters = tlsCP;
-    }
-    return tlsClientParameters;
   }
 
   /**
@@ -293,31 +245,313 @@ public class JaxWsClientInitializer {
   }
 
   /**
-   * @return Outgoing authentication: username
+   * @return Connection timeout in ms.
    */
-  public final String getUsername() {
-    return this.username;
+  public final int getConnectTimeout() {
+    return this.connectTimeout;
   }
 
   /**
-   * @param value Outgoing authentication: username
+   * @param value Connection timeout in ms.
    */
-  public final void setUsername(String value) {
-    this.username = value;
+  public final void setConnectTimeout(int value) {
+    this.connectTimeout = value;
   }
 
   /**
-   * @return Outgoing authentication: password
+   * @return Response timeout in ms.
    */
-  public final String getPassword() {
-    return this.password;
+  public final int getSocketTimeout() {
+    return this.socketTimeout;
   }
 
   /**
-   * @param value Outgoing authentication: password
+   * @param value Response timeout in ms.
    */
-  public final void setPassword(String value) {
-    this.password = value;
+  public final void setSocketTimeout(int value) {
+    this.socketTimeout = value;
+  }
+
+  /**
+   * @return Http basic authentication user.
+   */
+  public final String getHttpUser() {
+    return this.httpUser;
+  }
+
+  /**
+   * @param value Http basic authentication user.
+   */
+  public final void setHttpUser(String value) {
+    this.httpUser = value;
+  }
+
+  /**
+   * @return Http basic authentication password
+   */
+  public final String getHttpPassword() {
+    return this.httpPassword;
+  }
+
+  /**
+   * @param value Http basic authentication password
+   */
+  public final void setHttpPassword(String value) {
+    this.httpPassword = value;
+  }
+
+  /**
+   * @return Proxy host name
+   */
+  public final String getProxyHost() {
+    return this.proxyHost;
+  }
+
+  /**
+   * @param value Proxy host name
+   */
+  public final void setProxyHost(String value) {
+    this.proxyHost = value;
+  }
+
+  /**
+   * @return Proxy port
+   */
+  public final int getProxyPort() {
+    return this.proxyPort;
+  }
+
+  /**
+   * @param value Proxy port
+   */
+  public final void setProxyPort(int value) {
+    this.proxyPort = value;
+  }
+
+  /**
+   * @return Proxy user name
+   */
+  public final String getProxyUser() {
+    return this.proxyUser;
+  }
+
+  /**
+   * @param value Proxy user name
+   */
+  public final void setProxyUser(String value) {
+    this.proxyUser = value;
+  }
+
+  /**
+   * @return Proxy password
+   */
+  public final String getProxyPassword() {
+    return this.proxyPassword;
+  }
+
+  /**
+   * @param value Proxy password
+   */
+  public final void setProxyPassword(String value) {
+    this.proxyPassword = value;
+  }
+
+  /**
+   * @return SSL context type (default: TLS)
+   */
+  public final String getSslContextType() {
+    return this.sslContextType;
+  }
+
+  /**
+   * @param value SSL context type (default: TLS)
+   */
+  public final void setSslContextType(String value) {
+    this.sslContextType = value;
+    this.tlsClientParameters = null;
+  }
+
+  /**
+   * @return Key manager type (default: SunX509)
+   */
+  public final String getKeyManagerType() {
+    return this.keyManagerType;
+  }
+
+  /**
+   * @param value Key manager type (default: SunX509)
+   */
+  public final void setKeyManagerType(String value) {
+    this.keyManagerType = value;
+    this.tlsClientParameters = null;
+  }
+
+  /**
+   * @return Key store type (default: PKCS12)
+   */
+  public final String getKeyStoreType() {
+    return this.keyStoreType;
+  }
+
+  /**
+   * @param value Key store type (default: PKCS12)
+   */
+  public final void setKeyStoreType(String value) {
+    this.keyStoreType = value;
+    this.tlsClientParameters = null;
+  }
+
+  /**
+   * @return Key store file path
+   */
+  public final String getKeyStorePath() {
+    return this.keyStorePath;
+  }
+
+  /**
+   * @param value Key store file path
+   */
+  public final void setKeyStorePath(String value) {
+    this.keyStorePath = value;
+    this.tlsClientParameters = null;
+  }
+
+  /**
+   * @return Key store password
+   */
+  public final String getKeyStorePassword() {
+    return this.keyStorePassword;
+  }
+
+  /**
+   * @param value Key store password
+   */
+  public final void setKeyStorePassword(String value) {
+    this.keyStorePassword = value;
+    this.tlsClientParameters = null;
+  }
+
+  /**
+   * @return Trust manager type (default: SunX509)
+   */
+  public final String getTrustManagerType() {
+    return this.trustManagerType;
+  }
+
+  /**
+   * @param value Trust manager type (default: SunX509)
+   */
+  public final void setTrustManagerType(String value) {
+    this.trustManagerType = value;
+    this.tlsClientParameters = null;
+  }
+
+  /**
+   * @return Trust store type (default: JKS)
+   */
+  public final String getTrustStoreType() {
+    return this.trustStoreType;
+  }
+
+  /**
+   * @param value Trust store type (default: JKS)
+   */
+  public final void setTrustStoreType(String value) {
+    this.trustStoreType = value;
+    this.tlsClientParameters = null;
+  }
+
+  /**
+   * @return Trust store file path
+   */
+  public final String getTrustStorePath() {
+    return this.trustStorePath;
+  }
+
+  /**
+   * @param value Trust store file path
+   */
+  public final void setTrustStorePath(String value) {
+    this.trustStorePath = value;
+    this.tlsClientParameters = null;
+  }
+
+  /**
+   * @return Trust store password
+   */
+  public final String getTrustStorePassword() {
+    return this.trustStorePassword;
+  }
+
+  /**
+   * @param vaule Trust store password
+   */
+  public final void setTrustStorePassword(String vaule) {
+    this.trustStorePassword = vaule;
+    this.tlsClientParameters = null;
+  }
+
+  /**
+   * Create TLS client parameters based on given certstore path/password parameters.
+   * Caches the parameter in member variable of this factory.
+   * @return TLS client parameters
+   * @throws IOException
+   * @throws GeneralSecurityException
+   */
+  public final TLSClientParameters getTLSClientParameters() throws IOException, GeneralSecurityException {
+    if (tlsClientParameters == null) {
+      TLSClientParameters tlsCP = new TLSClientParameters();
+
+      // initialize certstore
+      if (CertificateLoader.isSslTrustStoreEnbaled(this)) {
+        try {
+          KeyManagerFactory keyManagerFactory = CertificateLoader.getKeyManagerFactory(this);
+          tlsCP.setKeyManagers(keyManagerFactory.getKeyManagers());
+        }
+        catch (Throwable ex) {
+          throw new RuntimeException("Unable to initialize certificate store for SOAP endpoint.\n"
+              + "Please check configuration parameters 'certstorePath' and 'certstorePassword' in this config:\n"
+              + this.toString(), ex);
+        }
+      }
+
+      // initialize trustStore
+      if (CertificateLoader.isSslTrustStoreEnbaled(this)) {
+        try {
+          TrustManagerFactory trustManagerFactory = CertificateLoader.getTrustManagerFactory(this);
+          tlsCP.setTrustManagers(trustManagerFactory.getTrustManagers());
+        }
+        catch (Throwable ex) {
+          throw new RuntimeException("Unable to initialize trust store for SOAP endpoint.\n"
+              + "Please check configuration parameters 'trustStorePath' and 'trustStorePassword' in this config:\n"
+              + this.toString(), ex);
+        }
+      }
+
+      tlsClientParameters = tlsCP;
+    }
+    return tlsClientParameters;
+  }
+
+  /**
+   * @param value CXF TSL client parameters
+   */
+  public final void setTLSClientParameters(TLSClientParameters value) {
+    this.tlsClientParameters = value;
+  }
+
+  /**
+   * @return Addressing-To URI to be sent as WS-Adressing header
+   */
+  public final String getWSAddressingToUri() {
+    return this.wsAddressingToUri;
+  }
+
+  /**
+   * @param value Addressing-To URI to be sent as WS-Adressing header
+   */
+  public final void setWSAddressingToUri(String value) {
+    this.wsAddressingToUri = value;
   }
 
   /**
@@ -348,160 +582,6 @@ public class JaxWsClientInitializer {
    */
   public final void setAllowChunking(boolean value) {
     this.allowChunking = value;
-  }
-
-  /**
-   * @return Adressing URL if WS-Adressing feature should be used
-   */
-  public final String getWSAdressingUrl() {
-    return this.wsAdressingUrl;
-  }
-
-  /**
-   * @param value Adressing URL if WS-Adressing feature should be used
-   */
-  public final void setWSAdressingUrl(String value) {
-    this.wsAdressingUrl = value;
-  }
-
-  /**
-   * @return HTTP connection timeout
-   */
-  public final int getTimeoutConnection() {
-    return this.timeoutConnection;
-  }
-
-  /**
-   * @param value HTTP connection timeout
-   */
-  public final void setTimeoutConnection(int value) {
-    this.timeoutConnection = value;
-  }
-
-  /**
-   * @return HTTP data receive timout
-   */
-  public final int getTimeoutReceive() {
-    return this.timeoutReceive;
-  }
-
-  /**
-   * @param value HTTP data receive timout
-   */
-  public final void setTimeoutReceive(int value) {
-    this.timeoutReceive = value;
-  }
-
-  /**
-   * @return Proxy host name
-   */
-  public String getProxyHost() {
-    return this.proxyHost;
-  }
-
-  /**
-   * @param value Proxy host name
-   */
-  public void setProxyHost(String value) {
-    this.proxyHost = value;
-  }
-
-  /**
-   * @return Proxy port
-   */
-  public int getProxyPort() {
-    return this.proxyPort;
-  }
-
-  /**
-   * @param value Proxy port
-   */
-  public void setProxyPort(int value) {
-    this.proxyPort = value;
-  }
-
-  /**
-   * @return Proxy user name
-   */
-  public String getProxyUsername() {
-    return this.proxyUsername;
-  }
-
-  /**
-   * @param value Proxy user name
-   */
-  public void setProxyUsername(String value) {
-    this.proxyUsername = value;
-  }
-
-  /**
-   * @return Proxy password
-   */
-  public String getProxyPassword() {
-    return this.proxyPassword;
-  }
-
-  /**
-   * @param value Proxy password
-   */
-  public void setProxyPassword(String value) {
-    this.proxyPassword = value;
-  }
-
-  /**
-   * @return Certificate store path
-   */
-  public String getCertstorePath() {
-    return this.certstorePath;
-  }
-
-  /**
-   * @param value Certificate store path
-   */
-  public final void setCertstorePath(String value) {
-    this.certstorePath = value;
-  }
-
-  /**
-   * @return Certificate store password
-   */
-  public final String getCertstorePassword() {
-    return this.certstorePassword;
-  }
-
-  /**
-   * @param value Certificate store password
-   */
-  public final void setCertstorePassword(String value) {
-    this.certstorePassword = value;
-  }
-
-  /**
-   * @return Trust store path
-   */
-  public final String getTruststorePath() {
-    return this.truststorePath;
-  }
-
-  /**
-   * @param value Trust store path
-   */
-  public final void setTruststorePath(String value) {
-    this.truststorePath = value;
-  }
-
-  /**
-   * @return Trust store password
-   */
-  public final String getTruststorePassword() {
-    return this.truststorePassword;
-  }
-
-  /**
-   * @param value Trust store password
-   */
-  public final void setTruststorePassword(String value) {
-    this.truststorePassword = value;
   }
 
   @Override

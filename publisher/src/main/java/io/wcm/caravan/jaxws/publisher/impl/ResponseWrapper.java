@@ -47,7 +47,7 @@ public final class ResponseWrapper extends HttpServletResponseWrapper {
       super.flushBuffer();
     }
     catch (IOException ex) {
-      // Suppress exception concering closed streams during buffer flushing of SOAP server requests (DVDI-1171)
+      // Suppress exception concerning closed streams during buffer flushing of SOAP server requests
       // (buffer is flushed automatically on close).
       log.debug("IO Exception occured during buffer flushing, suppressing it.", ex);
     }
