@@ -138,7 +138,7 @@ public class JaxWsClientInitializer {
 
       // ignore unexpected elements and attributes on data binding
       if (isIgnoreUnexpectedElements()) {
-        // disable schema validation to be upward-compatible to future IA schema changes
+        // disable schema validation to be upward-compatible to future schema changes
         ((BindingProvider)portObject).getRequestContext().put(JAXB_VALIDATION, false);
         ((BindingProvider)portObject).getRequestContext().put(SCHEMA_VALIDATION, false);
       }
