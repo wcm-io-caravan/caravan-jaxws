@@ -24,9 +24,6 @@ import org.apache.hello_world_soap_http.PingMeFault;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.metatype.annotations.AttributeDefinition;
-import org.osgi.service.metatype.annotations.Designate;
-import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
 import io.wcm.caravan.jaxws.consumer.JaxWsClientFactoryService;
 
@@ -34,14 +31,7 @@ import io.wcm.caravan.jaxws.consumer.JaxWsClientFactoryService;
  * Hello World SOAP Client.
  */
 @Component(service = HelloWorldConsumer.class)
-@Designate(ocd = HelloWorldConsumer.Config.class)
 public class HelloWorldConsumer {
-
-  @ObjectClassDefinition(name = "Hello World SOAP Client")
-  @interface Config {
-    @AttributeDefinition(description = "Soap Service URL")
-    String soapServiceUrl();
-  }
 
   @Reference
   private JaxWsClientFactoryService jaxWsClientFactoryService;
@@ -49,8 +39,9 @@ public class HelloWorldConsumer {
   private Greeter greeterClient;
 
   @Activate
-  private void activate(Config config) {
-    greeterClient = jaxWsClientFactoryService.create(Greeter.class, config.soapServiceUrl());
+  private void activate() {
+    String url = System.getProperty("launchpad.http.server.url") + "/helloWorldService";
+    greeterClient = jaxWsClientFactoryService.create(Greeter.class, url);
   }
 
   /**
