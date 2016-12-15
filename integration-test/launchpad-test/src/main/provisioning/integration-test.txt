@@ -16,7 +16,3 @@
   io.wcm.caravan/io.wcm.caravan.jaxws.integration-test.helloworld-proxy
   io.wcm.caravan/io.wcm.caravan.jaxws.integration-test.helloworld-publisher
   io.wcm.caravan/io.wcm.caravan.jaxws.integration-test.helloworld-consumer
-
-[configurations]
-  io.wcm.caravan.jaxws.integrationtest.helloworld.consumer.HelloWorldConsumer
-    soapServiceUrl="http://localhost:${http.port}/helloWorldService"
