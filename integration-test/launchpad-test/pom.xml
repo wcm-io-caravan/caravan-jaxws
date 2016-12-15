@@ -102,6 +102,18 @@
       <version>1.0.0-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>io.wcm.caravan</groupId>
+      <artifactId>io.wcm.caravan.jaxws.integration-test.helloworld-publisher</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.wcm.caravan</groupId>
+      <artifactId>io.wcm.caravan.jaxws.integration-test.helloworld-consumer</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
 
     <!-- sling testing tools bundles requires httpclient -->
     <dependency>
@@ -119,7 +131,7 @@
     <dependency>
       <groupId>io.wcm.caravan</groupId>
       <artifactId>io.wcm.caravan.integration-test.minimal-launchpad</artifactId>
-      <version>1.0.0</version>
+      <version>1.0.1-SNAPSHOT</version>
       <type>slingfeature</type>
       <scope>provided</scope>
     </dependency>
@@ -230,21 +242,16 @@
         </executions>
         <configuration>
           <usePomDependencies>true</usePomDependencies>
+          <usePomVariables>true</usePomVariables>
           <servers>
             <server>
               <port>${http.port}</port>
               <controlPort>${sling.control.port}</controlPort>
-              <runmode>jackrabbit</runmode>
               <contextPath>${http.base.path}</contextPath>
               <debug>${launchpad.debug}</debug>
             </server>
           </servers>
         </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>maven-bundle-plugin</artifactId>
       </plugin>
 
       <!-- do not deploy this pom into maven repository -->
