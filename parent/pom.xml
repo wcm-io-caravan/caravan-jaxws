@@ -25,7 +25,7 @@
   <parent>
     <groupId>io.wcm.caravan</groupId>
     <artifactId>io.wcm.caravan.parent_toplevel</artifactId>
-    <version>1.1.1-SNAPSHOT</version>
+    <version>1.1.2</version>
     <relativePath />
   </parent>
 
@@ -55,7 +55,7 @@
       <dependency>
         <groupId>io.wcm.osgi.wrapper</groupId>
         <artifactId>io.wcm.osgi.wrapper.cxf</artifactId>
-        <version>${apache-cxf-version}-0000-SNAPSHOT</version>
+        <version>${apache-cxf-version}-0000</version>
       </dependency>
 
     </dependencies>
