@@ -25,13 +25,13 @@
   <parent>
     <groupId>io.wcm.caravan</groupId>
     <artifactId>io.wcm.caravan.parent_toplevel</artifactId>
-    <version>1.1.1-SNAPSHOT</version>
+    <version>1.1.2</version>
     <relativePath />
   </parent>
 
   <groupId>io.wcm.caravan</groupId>
   <artifactId>io.wcm.caravan.jaxws.parent</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.0</version>
   <packaging>pom</packaging>
 
   <name>JAX-WS</name>
@@ -46,7 +46,34 @@
 
   <properties>
     <site.url.module.prefix>jaxws</site.url.module.prefix>
+    <apache-cxf-version>3.1.9</apache-cxf-version>
   </properties>
+  
+  <dependencyManagement>
+    <dependencies>
+
+      <dependency>
+        <groupId>io.wcm.osgi.wrapper</groupId>
+        <artifactId>io.wcm.osgi.wrapper.cxf</artifactId>
+        <version>${apache-cxf-version}-0000</version>
+      </dependency>
+
+    </dependencies>
+  </dependencyManagement>
+  
+  <build>
+    <pluginManagement>
+      <plugins>
+
+        <plugin>
+          <groupId>org.apache.cxf</groupId>
+          <artifactId>cxf-codegen-plugin</artifactId>
+          <version>${apache-cxf-version}</version>
+        </plugin>
+        
+      </plugins>
+    </pluginManagement>
+  </build>
 
   <distributionManagement>
     <site>

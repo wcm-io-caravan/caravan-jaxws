@@ -6,7 +6,7 @@ wcm.io Caravan - JSON Data Pipelining Infrastructure
 
 ![Caravan](http://caravan.wcm.io/images/caravan.gif)
 
-JAX-WS integration for OSGi-based RESTful micro services.
+Consume and Publish SOAP services in OSGi services via JAX-WS.
 
 Documentation: http://caravan.wcm.io/jaxws/<br/>
 Issues: https://wcm-io.atlassian.net/<br/>

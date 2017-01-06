@@ -1,5 +1,3 @@
-# Libraries for Integration Test
-
 [feature name=integration-test]
 
 [artifacts]
@@ -10,5 +8,9 @@
   io.wcm.osgi.wrapper/io.wcm.osgi.wrapper.hibernate-validator
   org.apache.sling/org.apache.sling.junit.core
   org.apache.sling/org.apache.sling.testing.tools
+  io.wcm.osgi.wrapper/io.wcm.osgi.wrapper.cxf
   io.wcm.caravan/io.wcm.caravan.jaxws.consumer
   io.wcm.caravan/io.wcm.caravan.jaxws.publisher
+  io.wcm.caravan/io.wcm.caravan.jaxws.integration-test.helloworld-proxy
+  io.wcm.caravan/io.wcm.caravan.jaxws.integration-test.helloworld-publisher
+  io.wcm.caravan/io.wcm.caravan.jaxws.integration-test.helloworld-consumer
