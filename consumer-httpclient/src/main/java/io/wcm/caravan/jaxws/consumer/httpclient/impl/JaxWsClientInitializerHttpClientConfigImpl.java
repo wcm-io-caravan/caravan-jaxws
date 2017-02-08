@@ -96,10 +96,12 @@ public class JaxWsClientInitializerHttpClientConfigImpl implements JaxWsClientIn
     jaxws.setSslContextType(config.getSslContextType());
     jaxws.setKeyManagerType(config.getKeyManagerType());
     jaxws.setKeyStoreType(config.getKeyStoreType());
+    jaxws.setKeyStoreProvider(config.getKeyStoreProvider());
     jaxws.setKeyStorePath(config.getKeyStorePath());
     jaxws.setKeyStorePassword(config.getKeyStorePassword());
     jaxws.setTrustManagerType(config.getTrustManagerType());
     jaxws.setTrustStoreType(config.getTrustStoreType());
+    jaxws.setTrustStoreProvider(config.getTrustStoreProvider());
     jaxws.setTrustStorePath(config.getTrustStorePath());
     jaxws.setTrustStorePassword(config.getTrustStorePassword());
   }

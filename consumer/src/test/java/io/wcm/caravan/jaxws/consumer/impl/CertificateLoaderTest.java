@@ -24,6 +24,7 @@ import static org.junit.Assert.assertNotNull;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.security.KeyStoreException;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.TrustManagerFactory;
@@ -40,7 +41,9 @@ public class CertificateLoaderTest {
   public OsgiContext context = new OsgiContext();
 
   public static final String KEYSTORE_PATH = "/certificates/testcert.p12";
+  public static final String KEYSTORE_PFX_PATH = "/certificates/pfxtestcert.pfx";
   public static final String KEYSTORE_PASSWORD = "test-certificate";
+  public static final String KEYSTORE_PFX_PASSWORD = "Start123";
   public static final String TRUSTSTORE_PATH = "/certificates/trust.jks";
   public static final String TRUSTSTORE_PASSWORD = "test-keystore";
 
@@ -96,6 +99,61 @@ public class CertificateLoaderTest {
     JaxWsClientInitializer config = new JaxWsClientInitializer();
     config.setTrustStorePath(null);
     config.setTrustStorePassword(TRUSTSTORE_PASSWORD);
+
+    CertificateLoader.getTrustManagerFactory(config);
+  }
+
+  @Test
+  public void testKeyManagerFactoryPFXNoProviderSet() throws Exception {
+    JaxWsClientInitializer config = new JaxWsClientInitializer();
+    config.setKeyStorePath(KEYSTORE_PFX_PATH);
+    config.setKeyStorePassword(KEYSTORE_PFX_PASSWORD);
+    config.setKeyStoreType("PKCS12");
+
+    KeyManagerFactory keyManagerFactory = CertificateLoader.getKeyManagerFactory(config);
+    assertNotNull(keyManagerFactory);
+  }
+
+  @Test
+  public void testKeyManagerFactoryPFXWithProvider() throws Exception {
+    JaxWsClientInitializer config = new JaxWsClientInitializer();
+    config.setKeyStorePath(KEYSTORE_PFX_PATH);
+    config.setKeyStorePassword(KEYSTORE_PFX_PASSWORD);
+    config.setKeyStoreType("PKCS12");
+    config.setKeyStoreProvider("SunJSSE");
+
+    KeyManagerFactory keyManagerFactory = CertificateLoader.getKeyManagerFactory(config);
+    assertNotNull(keyManagerFactory);
+  }
+
+  @Test(expected = KeyStoreException.class)
+  public void testKeyManagerFactoryPFXWithWrongProvider() throws Exception {
+    JaxWsClientInitializer config = new JaxWsClientInitializer();
+    config.setKeyStorePath(KEYSTORE_PFX_PATH);
+    config.setKeyStorePassword(KEYSTORE_PFX_PASSWORD);
+    config.setKeyStoreType("PKCS12");
+    config.setKeyStoreProvider("SunPCSC"); // wrong provider for keystore
+
+    CertificateLoader.getKeyManagerFactory(config);
+  }
+
+  @Test
+  public void testGetTrustManagerFactoryWithProvider() throws IOException, GeneralSecurityException {
+    JaxWsClientInitializer config = new JaxWsClientInitializer();
+    config.setTrustStorePath(TRUSTSTORE_PATH);
+    config.setTrustStorePassword(TRUSTSTORE_PASSWORD);
+    config.setTrustStoreProvider("SUN");
+
+    TrustManagerFactory trustManagerFactory = CertificateLoader.getTrustManagerFactory(config);
+    assertNotNull(trustManagerFactory);
+  }
+
+  @Test(expected = KeyStoreException.class)
+  public void testGetTrustManagerFactoryWithWrongProvider() throws IOException, GeneralSecurityException {
+    JaxWsClientInitializer config = new JaxWsClientInitializer();
+    config.setTrustStorePath(TRUSTSTORE_PATH);
+    config.setTrustStorePassword(TRUSTSTORE_PASSWORD);
+    config.setTrustStoreProvider("SunJSSE"); // wrong provider for truststore
 
     CertificateLoader.getTrustManagerFactory(config);
   }

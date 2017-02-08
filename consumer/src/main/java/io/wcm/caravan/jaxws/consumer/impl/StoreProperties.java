@@ -27,11 +27,13 @@ class StoreProperties {
   private final String password;
   private final String managerType;
   private final String type;
+  private final String provider;
 
-  StoreProperties(String password, String managerType, String type) {
+  StoreProperties(String password, String managerType, String type, String provider) {
     this.password = password;
     this.managerType = managerType;
     this.type = type;
+    this.provider = provider;
   }
 
   /**
@@ -53,6 +55,13 @@ class StoreProperties {
    */
   public String getType() {
     return type;
+  }
+
+  /**
+   * @return Return the provider.
+   */
+  public String getProvider() {
+    return provider;
   }
 
 }

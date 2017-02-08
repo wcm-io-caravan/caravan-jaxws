@@ -82,10 +82,12 @@ public class JaxWsClientInitializer {
   private String sslContextType = CertificateLoader.SSL_CONTEXT_TYPE_DEFAULT;
   private String keyManagerType = CertificateLoader.KEY_MANAGER_TYPE_DEFAULT;
   private String keyStoreType = CertificateLoader.KEY_STORE_TYPE_DEFAULT;
+  private String keyStoreProvider;
   private String keyStorePath;
   private String keyStorePassword;
   private String trustManagerType = CertificateLoader.TRUST_MANAGER_TYPE_DEFAULT;
   private String trustStoreType = CertificateLoader.TRUST_STORE_TYPE_DEFAULT;
+  private String trustStoreProvider;
   private String trustStorePath;
   private String trustStorePassword;
   private String wsAddressingToUri;
@@ -402,6 +404,21 @@ public class JaxWsClientInitializer {
   }
 
   /**
+   * @return Key store provider (default: null = use first matching security provider)
+   */
+  public String getKeyStoreProvider() {
+    return this.keyStoreProvider;
+  }
+
+  /**
+   * @param value Key store provider (default: null = use first matching security provider)
+   */
+  public void setKeyStoreProvider(String value) {
+    this.keyStoreProvider = value;
+    this.tlsClientParameters = null;
+  }
+
+  /**
    * @return Key store file path
    */
   public final String getKeyStorePath() {
@@ -458,6 +475,21 @@ public class JaxWsClientInitializer {
    */
   public final void setTrustStoreType(String value) {
     this.trustStoreType = value;
+    this.tlsClientParameters = null;
+  }
+
+  /**
+   * @return Trust store provider (default: null = use first matching security provider)
+   */
+  public String getTrustStoreProvider() {
+    return this.trustStoreProvider;
+  }
+
+  /**
+   * @param value Trust store provider (default: null = use first matching security provider)
+   */
+  public void setTrustStoreProvider(String value) {
+    this.trustStoreProvider = value;
     this.tlsClientParameters = null;
   }
 

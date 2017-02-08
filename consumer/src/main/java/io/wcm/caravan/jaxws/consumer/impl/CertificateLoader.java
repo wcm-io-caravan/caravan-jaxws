@@ -78,8 +78,8 @@ public final class CertificateLoader {
    */
   public static KeyManagerFactory getKeyManagerFactory(JaxWsClientInitializer config)
       throws IOException, GeneralSecurityException {
-    return getKeyManagerFactory(config.getKeyStorePath(),
-        new StoreProperties(config.getKeyStorePassword(), config.getKeyManagerType(), config.getKeyStoreType()));
+    return getKeyManagerFactory(config.getKeyStorePath(), new StoreProperties(config.getKeyStorePassword(),
+        config.getKeyManagerType(), config.getKeyStoreType(), config.getKeyStoreProvider()));
   }
 
   /**
@@ -119,10 +119,17 @@ public final class CertificateLoader {
    */
   private static KeyManagerFactory getKeyManagerFactory(InputStream keyStoreStream, StoreProperties storeProperties)
       throws IOException, GeneralSecurityException {
-    KeyStore ts = KeyStore.getInstance(storeProperties.getType());
-    ts.load(keyStoreStream, storeProperties.getPassword().toCharArray());
+    // use provider if given, otherwise use the first matching security provider
+    final KeyStore ks;
+    if (StringUtils.isNotBlank(storeProperties.getProvider())) {
+      ks = KeyStore.getInstance(storeProperties.getType(), storeProperties.getProvider());
+    }
+    else {
+      ks = KeyStore.getInstance(storeProperties.getType());
+    }
+    ks.load(keyStoreStream, storeProperties.getPassword().toCharArray());
     KeyManagerFactory kmf = KeyManagerFactory.getInstance(storeProperties.getManagerType());
-    kmf.init(ts, storeProperties.getPassword().toCharArray());
+    kmf.init(ks, storeProperties.getPassword().toCharArray());
     return kmf;
   }
 
@@ -135,8 +142,8 @@ public final class CertificateLoader {
    */
   public static TrustManagerFactory getTrustManagerFactory(JaxWsClientInitializer config)
       throws IOException, GeneralSecurityException {
-    return getTrustManagerFactory(config.getTrustStorePath(),
-        new StoreProperties(config.getTrustStorePassword(), config.getTrustManagerType(), config.getTrustStoreType()));
+    return getTrustManagerFactory(config.getTrustStorePath(), new StoreProperties(config.getTrustStorePassword(),
+        config.getTrustManagerType(), config.getTrustStoreType(), config.getTrustStoreProvider()));
   }
 
   /**
@@ -176,10 +183,17 @@ public final class CertificateLoader {
    */
   private static TrustManagerFactory getTrustManagerFactory(InputStream trustStoreStream, StoreProperties storeProperties)
       throws IOException, GeneralSecurityException {
-    KeyStore jks = KeyStore.getInstance(storeProperties.getType());
-    jks.load(trustStoreStream, storeProperties.getPassword().toCharArray());
+    // use provider if given, otherwise use the first matching security provider
+    final KeyStore ks;
+    if (StringUtils.isNotBlank(storeProperties.getProvider())) {
+      ks = KeyStore.getInstance(storeProperties.getType(), storeProperties.getProvider());
+    }
+    else {
+      ks = KeyStore.getInstance(storeProperties.getType());
+    }
+    ks.load(trustStoreStream, storeProperties.getPassword().toCharArray());
     TrustManagerFactory tmf = TrustManagerFactory.getInstance(storeProperties.getManagerType());
-    tmf.init(jks);
+    tmf.init(ks);
     return tmf;
   }
 
