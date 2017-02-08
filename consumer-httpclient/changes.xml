@@ -23,6 +23,14 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.1.0" date="2017-02-08">
+      <action type="add" dev="ptolstych" issue="WCARAV-3">
+        Make security provider to be used for getting KeyStore manager and TrustStore manager configurable.
+        By default the best-matching security provider is used as it was before.
+        If the bundle is used inside AEM it may be required to configure the "SunJSSE" provider for the key store to load a PKCS12 certificate.
+      </action>
+    </release>
+
     <release version="1.0.0" date="2017-01-06">
       <action type="update" dev="sseifert">
         Initial release.

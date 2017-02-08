@@ -26,6 +26,7 @@ import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.HTTP_U
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.KEYMANAGER_TYPE_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.KEYSTORE_PASSWORD_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.KEYSTORE_PATH_PROPERTY;
+import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.KEYSTORE_PROVIDER_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.KEYSTORE_TYPE_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.PATH_PATTERNS_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.PROXY_HOST_PROPERTY;
@@ -37,6 +38,7 @@ import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.SSL_CO
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.TRUSTMANAGER_TYPE_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.TRUSTSTORE_PASSWORD_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.TRUSTSTORE_PATH_PROPERTY;
+import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.TRUSTSTORE_PROVIDER_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.TRUSTSTORE_TYPE_PROPERTY;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -89,10 +91,12 @@ public class JaxWsClientInitializerHttpClientConfigImplTest {
         SSL_CONTEXT_TYPE_PROPERTY, "sslType1",
         KEYMANAGER_TYPE_PROPERTY, "keyManager1",
         KEYSTORE_TYPE_PROPERTY, "keyStore1",
+        KEYSTORE_PROVIDER_PROPERTY, "keyStoreProvider1",
         KEYSTORE_PATH_PROPERTY, "keyPath1",
         KEYSTORE_PASSWORD_PROPERTY, "keyPwd1",
         TRUSTMANAGER_TYPE_PROPERTY, "trustManager1",
         TRUSTSTORE_TYPE_PROPERTY, "trustStore1",
+        TRUSTSTORE_PROVIDER_PROPERTY, "trustStoreProvider1",
         TRUSTSTORE_PATH_PROPERTY, "trustPath1",
         TRUSTSTORE_PASSWORD_PROPERTY, "trustPwd1");
 
@@ -110,10 +114,12 @@ public class JaxWsClientInitializerHttpClientConfigImplTest {
     assertEquals("sslType1", jaxws.getSslContextType());
     assertEquals("keyManager1", jaxws.getKeyManagerType());
     assertEquals("keyStore1", jaxws.getKeyStoreType());
+    assertEquals("keyStoreProvider1", jaxws.getKeyStoreProvider());
     assertEquals("keyPath1", jaxws.getKeyStorePath());
     assertEquals("keyPwd1", jaxws.getKeyStorePassword());
     assertEquals("trustManager1", jaxws.getTrustManagerType());
     assertEquals("trustStore1", jaxws.getTrustStoreType());
+    assertEquals("trustStoreProvider1", jaxws.getTrustStoreProvider());
     assertEquals("trustPath1", jaxws.getTrustStorePath());
     assertEquals("trustPwd1", jaxws.getTrustStorePassword());
   }

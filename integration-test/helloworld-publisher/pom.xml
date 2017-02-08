@@ -32,7 +32,7 @@
   <groupId>io.wcm.caravan</groupId>
   <artifactId>io.wcm.caravan.jaxws.integration-test.helloworld-publisher</artifactId>
   <packaging>bundle</packaging>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1-SNAPSHOT</version>
 
   <name>Hello World Proxy Publisher</name>
 
@@ -47,7 +47,7 @@
     <dependency>
       <groupId>io.wcm.caravan</groupId>
       <artifactId>io.wcm.caravan.jaxws.integration-test.helloworld-proxy</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
+      <version>1-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
 
