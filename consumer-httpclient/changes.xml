@@ -23,7 +23,7 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
-    <release version="1.1.0" date="not released">
+    <release version="1.1.0" date="2017-02-08">
       <action type="add" dev="ptolstych" issue="WCARAV-3">
         Make security provider to be used for getting KeyStore manager and TrustStore manager configurable.
         By default the best-matching security provider is used as it was before.
