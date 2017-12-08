@@ -36,6 +36,7 @@
 
   <name>JAX-WS Consumer HTTP Client</name>
   <description>Bridges Caravan Commons HTTP Client Configuration to JAX-WS Consumer configuration.</description>
+  <url>${site.url}/${site.url.module.prefix}/</url>
 
   <scm>
     <connection>scm:git:https://github.com/wcm-io-caravan/caravan-jaxws.git</connection>

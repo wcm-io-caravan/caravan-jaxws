@@ -36,6 +36,7 @@
 
   <name>JAX-WS Consumer</name>
   <description>Consumes SOAP Services via JAX-WS from OSGi services.</description>
+  <url>${site.url}/${site.url.module.prefix}/</url>
 
   <scm>
     <connection>scm:git:https://github.com/wcm-io-caravan/caravan-jaxws.git</connection>

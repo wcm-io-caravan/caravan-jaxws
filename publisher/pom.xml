@@ -36,6 +36,7 @@
 
   <name>JAX-WS Publisher</name>
   <description>Publishes OSGi services as SOAP services via JAX-WS.</description>
+  <url>${site.url}/${site.url.module.prefix}/</url>
 
   <scm>
     <connection>scm:git:https://github.com/wcm-io-caravan/caravan-jaxws.git</connection>
