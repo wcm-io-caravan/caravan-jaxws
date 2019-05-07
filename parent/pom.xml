@@ -74,7 +74,8 @@
         <plugin>
           <groupId>org.apache.cxf</groupId>
           <artifactId>cxf-codegen-plugin</artifactId>
-          <version>${apache-cxf-version}</version>
+          <!-- Use 3.3.x version to be compatible with Java 11 -->
+          <version>3.3.1</version>
         </plugin>
         
       </plugins>

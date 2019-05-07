@@ -60,23 +60,23 @@
 
   <dependencies>
 
-    <!-- Additional bundles needed by the Sling instance under test -->
+    <!-- Additional bundles needed by the Sling instance under test -->    
     <dependency>
       <groupId>org.apache.sling</groupId>
       <artifactId>org.apache.sling.junit.teleporter</artifactId>
-      <version>1.0.8</version>
+      <version>1.0.18</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.sling</groupId>
       <artifactId>org.apache.sling.junit.core</artifactId>
-      <version>1.0.22</version>
+      <version>1.0.26</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.sling</groupId>
       <artifactId>org.apache.sling.testing.tools</artifactId>
-      <version>1.0.14</version>
+      <version>1.0.16</version>
       <scope>provided</scope>
     </dependency>
 
@@ -134,16 +134,6 @@
       <artifactId>io.wcm.caravan.integration-test.minimal-launchpad</artifactId>
       <version>1.2.0-SNAPSHOT</version>
       <type>slingfeature</type>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.wcm.osgi.wrapper</groupId>
-      <artifactId>io.wcm.osgi.wrapper.jersey</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.wcm.osgi.wrapper</groupId>
-      <artifactId>io.wcm.osgi.wrapper.hibernate-validator</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
