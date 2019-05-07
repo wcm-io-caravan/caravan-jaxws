@@ -57,6 +57,12 @@
         <artifactId>io.wcm.osgi.wrapper.cxf</artifactId>
         <version>${apache-cxf-version}-0000</version>
       </dependency>
+      
+      <dependency>      
+        <groupId>org.apache.servicemix.specs</groupId>
+        <artifactId>org.apache.servicemix.specs.jaxws-api-2.0</artifactId>
+        <version>2.9.0</version>
+      </dependency>
 
     </dependencies>
   </dependencyManagement>
