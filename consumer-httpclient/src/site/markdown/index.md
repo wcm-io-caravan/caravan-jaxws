@@ -23,4 +23,4 @@ With this bundle it is possible to map those configuration also to the HTTP comm
 
 
 [jaxws-consumer]: ../consumer/
-[caravan-commons-httpclient]: http://caravan.wcm.io/commons/httpclient/
+[caravan-commons-httpclient]: https://caravan.wcm.io/commons/httpclient/
