@@ -22,7 +22,6 @@ package io.wcm.caravan.jaxws.consumer.httpclient.impl;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 import org.apache.commons.lang3.StringUtils;
@@ -45,12 +44,13 @@ public class JaxWsClientInitializerHttpClientConfigImpl implements JaxWsClientIn
   @Reference(service = HttpClientConfig.class,
       cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC,
       bind = "bindHttpClientConfig", unbind = "unbindHttpClientConfig")
-  private final ConcurrentMap<Comparable<Object>, HttpClientConfig> configItems = new ConcurrentSkipListMap<>();
+  private final Map<Comparable<Object>, HttpClientConfig> configItems = new ConcurrentSkipListMap<>();
 
   protected void bindHttpClientConfig(HttpClientConfig httpClientConfig, Map<String, Object> config) {
     configItems.put(ServiceUtil.getComparableForServiceRanking(config), httpClientConfig);
   }
 
+  @SuppressWarnings("unused")
   protected void unbindHttpClientConfig(HttpClientConfig httpClientConfig, Map<String, Object> config) {
     configItems.remove(ServiceUtil.getComparableForServiceRanking(config));
   }
