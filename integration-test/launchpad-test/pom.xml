@@ -94,7 +94,7 @@
     <dependency>
       <groupId>io.wcm.caravan</groupId>
       <artifactId>io.wcm.caravan.jaxws.publisher</artifactId>
-      <version>1.0.1-SNAPSHOT</version>
+      <version>1.0.3-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
