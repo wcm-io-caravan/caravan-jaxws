@@ -1,6 +1,6 @@
 <img src="https://wcm.io/images/favicon-16@2x.png"/> wcm.io Caravan JAX-WS
 ======
-[![Build Status](https://travis-ci.org/wcm-io-caravan/caravan-jaxws.png?branch=develop)](https://travis-ci.org/wcm-io-caravan/caravan-jaxws)
+[![Build Status](https://travis-ci.com/wcm-io-caravan/caravan-jaxws.png?branch=develop)](https://travis-ci.com/wcm-io-caravan/caravan-jaxws)
 
 wcm.io Caravan - JSON Data Pipelining Infrastructure
 
@@ -11,7 +11,7 @@ Consume and Publish SOAP services in OSGi services via JAX-WS.
 Documentation: https://caravan.wcm.io/jaxws/<br/>
 Issues: https://wcm-io.atlassian.net/<br/>
 Wiki: https://wcm-io.atlassian.net/wiki/<br/>
-Continuous Integration: https://travis-ci.org/wcm-io-caravan/caravan-jaxws/<br/>
+Continuous Integration: https://travis-ci.com/wcm-io-caravan/caravan-jaxws/<br/>
 Commercial support: https://wcm.io/commercial-support.html
 
 
