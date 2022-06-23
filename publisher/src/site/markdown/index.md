@@ -2,7 +2,7 @@
 
 Publishes OSGi services as SOAP services via JAX-WS.
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.wcm.caravan/io.wcm.caravan.jaxws.publisher/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.wcm.caravan/io.wcm.caravan.jaxws.publisher)
+[![Maven Central](https://img.shields.io/maven-central/v/io.wcm.caravan/io.wcm.caravan.jaxws.publisher)](https://repo1.maven.org/maven2/io/wcm/caravan/io.wcm.caravan.jaxws.publisher/)
 
 
 ### Documentation
@@ -31,7 +31,7 @@ Usage example: https://github.com/wcm-io-caravan/caravan-jaxws/tree/develop/inte
 ### Dependencies
 
 You also have to deploy this bundle which wraps [Apache CXF][apache-cxf] including the necessary dependencies:<br/>
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.wcm.osgi.wrapper/io.wcm.osgi.wrapper.cxf/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.wcm.osgi.wrapper/io.wcm.osgi.wrapper.cxf)
+[![Maven Central](https://img.shields.io/maven-central/v/io.wcm.osgi.wrapper/io.wcm.osgi.wrapper.cxf)](https://repo1.maven.org/maven2/io/wcm/osgi/wrapper/io.wcm.osgi.wrapper.cxf)
 
 
 [apache-cxf]: http://cxf.apache.org/
