@@ -10,7 +10,7 @@ wcm.io Caravan - JSON Data Pipelining Infrastructure
 Consume and Publish SOAP services in OSGi services via JAX-WS.
 
 Documentation: https://caravan.wcm.io/jaxws/<br/>
-Issues: https://wcm-io.atlassian.net/<br/>
+Issues: https://github.com/wcm-io-caravan/caravan-jaxws/issues<br/>
 Wiki: https://wcm-io.atlassian.net/wiki/<br/>
 Continuous Integration: https://github.com/wcm-io-caravan/caravan-jaxws/actions<br/>
 Commercial support: https://wcm.io/commercial-support.html
