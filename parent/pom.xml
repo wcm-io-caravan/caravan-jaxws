@@ -49,6 +49,11 @@
     <url>https://github.com/wcm-io-caravan/caravan-jaxws/actions</url>
   </ciManagement>
 
+  <issueManagement>
+    <system>GitHub</system>
+    <url>https://github.com/wcm-io-caravan/caravan-jaxws/issues/</url>
+  </issueManagement>
+
   <properties>
     <site.url.module.prefix>jaxws</site.url.module.prefix>
     <apache-cxf-version>3.1.9</apache-cxf-version>
