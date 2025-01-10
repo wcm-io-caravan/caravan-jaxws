@@ -12,7 +12,7 @@ Consumes SOAP Services via JAX-WS from OSGi services.
 
 
 [apidocs]: apidocs/
-[changelog]: changes-report.html
+[changelog]: changes.html
 
 
 ### Overview

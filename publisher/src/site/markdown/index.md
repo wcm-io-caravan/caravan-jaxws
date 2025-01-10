@@ -12,7 +12,7 @@ Publishes OSGi services as SOAP services via JAX-WS.
 
 
 [apidocs]: apidocs/
-[changelog]: changes-report.html
+[changelog]: changes.html
 
 
 ### Overview

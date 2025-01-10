@@ -12,7 +12,7 @@ Bridges Caravan Commons HTTP Client Configuration to JAX-WS Consumer configurati
 
 
 [apidocs]: apidocs/
-[changelog]: changes-report.html
+[changelog]: changes.html
 
 
 ### Overview
