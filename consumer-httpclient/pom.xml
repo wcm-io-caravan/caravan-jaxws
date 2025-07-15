@@ -61,7 +61,7 @@
     <dependency>
       <groupId>io.wcm.caravan</groupId>
       <artifactId>io.wcm.caravan.commons.httpclient</artifactId>
-      <version>1.2.0</version>
+      <version>1.4.2</version>
       <scope>compile</scope>
     </dependency>
 

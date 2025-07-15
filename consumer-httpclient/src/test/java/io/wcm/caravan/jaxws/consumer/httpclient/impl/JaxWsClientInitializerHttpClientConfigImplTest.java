@@ -19,27 +19,6 @@
  */
 package io.wcm.caravan.jaxws.consumer.httpclient.impl;
 
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.CONNECT_TIMEOUT_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.HOST_PATTERNS_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.HTTP_PASSWORD_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.HTTP_USER_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.KEYMANAGER_TYPE_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.KEYSTORE_PASSWORD_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.KEYSTORE_PATH_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.KEYSTORE_PROVIDER_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.KEYSTORE_TYPE_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.PATH_PATTERNS_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.PROXY_HOST_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.PROXY_PASSWORD_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.PROXY_PORT_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.PROXY_USER_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.SOCKET_TIMEOUT_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.SSL_CONTEXT_TYPE_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.TRUSTMANAGER_TYPE_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.TRUSTSTORE_PASSWORD_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.TRUSTSTORE_PATH_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.TRUSTSTORE_PROVIDER_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.TRUSTSTORE_TYPE_PROPERTY;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -78,27 +57,27 @@ public class JaxWsClientInitializerHttpClientConfigImplTest {
   @Test
   public void testWithConfig() {
     context.registerInjectActivateService(new HttpClientConfigImpl(),
-        HOST_PATTERNS_PROPERTY, "^server.*$",
-        PATH_PATTERNS_PROPERTY, ".*path.*",
-        CONNECT_TIMEOUT_PROPERTY, 123,
-        SOCKET_TIMEOUT_PROPERTY, 456,
-        HTTP_USER_PROPERTY, "user1",
-        HTTP_PASSWORD_PROPERTY, "pwd1",
-        PROXY_HOST_PROPERTY, "host1",
-        PROXY_PORT_PROPERTY, 789,
-        PROXY_USER_PROPERTY, "proxyUser1",
-        PROXY_PASSWORD_PROPERTY, "proxyPwd1",
-        SSL_CONTEXT_TYPE_PROPERTY, "sslType1",
-        KEYMANAGER_TYPE_PROPERTY, "keyManager1",
-        KEYSTORE_TYPE_PROPERTY, "keyStore1",
-        KEYSTORE_PROVIDER_PROPERTY, "keyStoreProvider1",
-        KEYSTORE_PATH_PROPERTY, "keyPath1",
-        KEYSTORE_PASSWORD_PROPERTY, "keyPwd1",
-        TRUSTMANAGER_TYPE_PROPERTY, "trustManager1",
-        TRUSTSTORE_TYPE_PROPERTY, "trustStore1",
-        TRUSTSTORE_PROVIDER_PROPERTY, "trustStoreProvider1",
-        TRUSTSTORE_PATH_PROPERTY, "trustPath1",
-        TRUSTSTORE_PASSWORD_PROPERTY, "trustPwd1");
+        "hostPatterns", "^server.*$",
+        "pathPatterns", ".*path.*",
+        "connectTimeout", 123,
+        "socketTimeout", 456,
+        "httpUser", "user1",
+        "httpPassword", "pwd1",
+        "proxyHost", "host1",
+        "proxyPort", 789,
+        "proxyUser", "proxyUser1",
+        "proxyPassword", "proxyPwd1",
+        "sslContextType", "sslType1",
+        "keyManagerType", "keyManager1",
+        "keyStoreType", "keyStore1",
+        "keyStoreProvider", "keyStoreProvider1",
+        "keyStorePath", "keyPath1",
+        "keyStorePassword", "keyPwd1",
+        "trustManagerType", "trustManager1",
+        "trustStoreType", "trustStore1",
+        "trustStoreProvider", "trustStoreProvider1",
+        "trustStorePath", "trustPath1",
+        "trustStorePassword", "trustPwd1");
 
     JaxWsClientInitializer jaxws = underTest.get(TEST_URI);
     assertNotNull(jaxws);
