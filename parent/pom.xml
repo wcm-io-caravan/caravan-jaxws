@@ -56,7 +56,7 @@
 
   <properties>
     <site.url.module.prefix>jaxws</site.url.module.prefix>
-    <apache-cxf-version>3.1.9</apache-cxf-version>
+    <apache-cxf-version>3.1.10</apache-cxf-version>
   </properties>
   
   <dependencies>
