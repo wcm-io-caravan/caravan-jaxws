@@ -43,6 +43,9 @@
     <!-- Java version -->
     <java.version>17</java.version>
 
+    <!-- Sling Starter version -->
+    <sling.starter.version>14-SNAPSHOT</sling.starter.version>
+
     <!-- start with -DkeepITServerRunning=true to allow to rerun ITs or inspect the server after the ITs have been executed there -->
     <keepITServerRunning>false</keepITServerRunning>
     <starter.min.bundles.count>200</starter.min.bundles.count>
@@ -80,7 +83,13 @@
       <groupId>jakarta.json</groupId>
       <artifactId>jakarta.json-api</artifactId>
       <version>2.0.2</version>
-      <scope>provided</scope>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.johnzon</groupId>
+      <artifactId>johnzon-core</artifactId>
+      <version>2.0.2</version>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
@@ -169,6 +178,61 @@
         </executions>
       </plugin>
 
+      <plugin>
+        <groupId>org.apache.sling</groupId>
+        <artifactId>slingfeature-maven-plugin</artifactId>
+        <version>1.9.2</version>
+        <extensions>true</extensions>
+
+        <configuration>
+          <replacePropertyVariables>apache-cxf-version</replacePropertyVariables>
+          <skipAddFeatureDependencies>true</skipAddFeatureDependencies>
+          <aggregates>
+            <aggregate>
+              <classifier>app</classifier>
+              <filesInclude>*.json</filesInclude>
+              <includeArtifact>
+                <groupId>org.apache.sling</groupId>
+                <artifactId>org.apache.sling.starter</artifactId>
+                <classifier>nosample_base</classifier>
+                <version>\${sling.starter.version}</version>
+                <type>slingosgifeature</type>
+              </includeArtifact>
+              <includeArtifact>
+                <groupId>org.apache.sling</groupId>
+                <artifactId>org.apache.sling.starter</artifactId>
+                <classifier>oak_persistence_sns</classifier>
+                <version>\${sling.starter.version}</version>
+                <type>slingosgifeature</type>
+              </includeArtifact>
+              <includeArtifact>
+                <groupId>org.apache.sling</groupId>
+                <artifactId>org.apache.sling.starter</artifactId>
+                <classifier>junit</classifier>
+                <version>\${sling.starter.version}</version>
+                <type>slingosgifeature</type>
+              </includeArtifact>
+            </aggregate>
+          </aggregates>
+          <scans>
+            <scan>
+              <includeClassifier>app</includeClassifier>
+            </scan>
+          </scans>
+        </configuration>
+        <executions>
+          <execution>
+            <id>prepare-features</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>aggregate-features</goal>
+              <goal>analyse-features</goal>
+              <goal>attach-features</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
       <!-- launch the Sling instances to test -->
       <plugin>
         <groupId>org.apache.sling</groupId>
@@ -179,13 +243,17 @@
             <launch>
               <id>sling-starter-oak-tar</id>
               <feature>
-                <groupId>org.apache.sling</groupId>
-                <artifactId>org.apache.sling.starter</artifactId>
-                <version>14-SNAPSHOT</version>
-                <classifier>oak_tar</classifier>
+                <groupId>io.wcm.caravan</groupId>
+                <artifactId>io.wcm.caravan.jaxws.integration-test.launchpad-test</artifactId>
+                <version>1-SNAPSHOT</version>
+                <classifier>app</classifier>
                 <type>slingosgifeature</type>
               </feature>
               <launcherArguments>
+                <vmOptions>
+                  <value>--add-opens java.base/java.lang=ALL-UNNAMED</value>
+                  <value>--add-opens java.base/java.net=ALL-UNNAMED</value>
+                </vmOptions>
                 <frameworkProperties>
                   <org.osgi.service.http.port>${http.port}</org.osgi.service.http.port>
                   <org.apache.felix.http.jetty.responseBufferSize>5000000</org.apache.felix.http.jetty.responseBufferSize>
