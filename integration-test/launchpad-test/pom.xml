@@ -214,21 +214,21 @@
                 <groupId>org.apache.sling</groupId>
                 <artifactId>org.apache.sling.starter</artifactId>
                 <classifier>nosample_base</classifier>
-                <version>\${sling.starter.version}</version>
+                <version>${sling.starter.version}</version>
                 <type>slingosgifeature</type>
               </includeArtifact>
               <includeArtifact>
                 <groupId>org.apache.sling</groupId>
                 <artifactId>org.apache.sling.starter</artifactId>
                 <classifier>oak_persistence_sns</classifier>
-                <version>\${sling.starter.version}</version>
+                <version>${sling.starter.version}</version>
                 <type>slingosgifeature</type>
               </includeArtifact>
               <includeArtifact>
                 <groupId>org.apache.sling</groupId>
                 <artifactId>org.apache.sling.starter</artifactId>
                 <classifier>junit</classifier>
-                <version>\${sling.starter.version}</version>
+                <version>${sling.starter.version}</version>
                 <type>slingosgifeature</type>
               </includeArtifact>
             </aggregate>
