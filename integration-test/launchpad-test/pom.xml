@@ -40,20 +40,30 @@
   </description>
 
   <properties>
-    <!-- Java version -->
     <java.version>17</java.version>
-
-    <!-- Sling Starter version -->
     <sling.starter.version>14-SNAPSHOT</sling.starter.version>
+    <jaxws.consumer.version>1.1.3-SNAPSHOT</jaxws.consumer.version>
+    <jaxws.publisher.version>1.0.3-SNAPSHOT</jaxws.publisher.version>
 
-    <!-- start with -DkeepITServerRunning=true to allow to rerun ITs or inspect the server after the ITs have been executed there -->
     <starter.min.bundles.count>200</starter.min.bundles.count>
     <it.startTimeoutSeconds>60</it.startTimeoutSeconds>
   </properties>
 
   <dependencies>
 
-    <!-- Additional bundles needed by the Sling instance under test -->    
+    <dependency>
+      <groupId>io.wcm.caravan</groupId>
+      <artifactId>io.wcm.caravan.jaxws.consumer</artifactId>
+      <version>${jaxws.consumer.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.wcm.caravan</groupId>
+      <artifactId>io.wcm.caravan.jaxws.publisher</artifactId>
+      <version>${jaxws.publisher.version}</version>
+      <scope>compile</scope>
+    </dependency>
+
     <dependency>
       <groupId>org.apache.sling</groupId>
       <artifactId>org.apache.sling.junit.teleporter</artifactId>
@@ -66,7 +76,6 @@
         </exclusion>
       </exclusions>
     </dependency>
-    <!-- Dependencies for the Test Build and Run -->
     <dependency>
         <groupId>org.apache.sling</groupId>
         <artifactId>org.apache.sling.commons.testing</artifactId>
@@ -158,7 +167,7 @@
         <extensions>true</extensions>
 
         <configuration>
-          <replacePropertyVariables>apache-cxf-version</replacePropertyVariables>
+          <replacePropertyVariables>jaxws.consumer.version,jaxws.publisher.version,apache-cxf-version</replacePropertyVariables>
           <skipAddFeatureDependencies>true</skipAddFeatureDependencies>
           <aggregates>
             <aggregate>
@@ -344,19 +353,6 @@
           </plugins>
         </pluginManagement>
       </build>
-    </profile>
-
-    <!-- "Fast" profile for quick compile of the project without any unit tests etc. -->
-    <profile>
-      <id>fast</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-      </activation>
-      <properties>
-        <unittests.skip>true</unittests.skip>
-        <integrationtests.skip>true</integrationtests.skip>
-        <maven.javadoc.skip>true</maven.javadoc.skip>
-      </properties>
     </profile>
 
   </profiles>
