@@ -1,52 +1,60 @@
 {
+  "variables": {
+    "http.port": "8080"
+  },
   "bundles": [
     {
-        "id": "org.apache.servicemix.specs/org.apache.servicemix.specs.jaxws-api-2.3/2.3_3",
-        "start-order": 15
+      "id": "org.apache.servicemix.specs/org.apache.servicemix.specs.jaxws-api-2.3/2.3_3",
+      "start-order": 15
     },
     {
-        "id": "org.apache.servicemix.specs/org.apache.servicemix.specs.saaj-api-1.4/1.4_2",
-        "start-order": 15
+      "id": "org.apache.servicemix.specs/org.apache.servicemix.specs.saaj-api-1.4/1.4_2",
+      "start-order": 15
     },
     {
-        "id": "org.apache.servicemix.bundles/org.apache.servicemix.bundles.saaj-impl/1.5.1_1",
-        "start-order": 15
+      "id": "org.apache.servicemix.bundles/org.apache.servicemix.bundles.saaj-impl/1.5.1_1",
+      "start-order": 15
     },
     {
-        "id": "jakarta.jws/jakarta.jws-api/2.1.0",
-        "start-order": 15
+      "id": "jakarta.jws/jakarta.jws-api/2.1.0",
+      "start-order": 15
     },
     {
-        "id": "org.apache.servicemix.specs/org.apache.servicemix.specs.jaxb-api-2.3/2.3_3",
-        "start-order": 15
+      "id": "org.apache.servicemix.specs/org.apache.servicemix.specs.jaxb-api-2.3/2.3_3",
+      "start-order": 15
     },
     {
-        "id": "org.apache.servicemix.bundles/org.apache.servicemix.bundles.jaxb-impl/2.2.11_1",
-        "start-order": 15
+      "id": "org.apache.servicemix.bundles/org.apache.servicemix.bundles.jaxb-impl/2.2.11_1",
+      "start-order": 15
     },
     {
-        "id": "io.wcm.osgi.wrapper/io.wcm.osgi.wrapper.cxf/${apache-cxf-version}-0000",
-        "start-order": 15
+      "id": "io.wcm.osgi.wrapper/io.wcm.osgi.wrapper.cxf/${apache-cxf-version}-0000",
+      "start-order": 15
     },
     {
-        "id": "io.wcm.caravan/io.wcm.caravan.jaxws.consumer/1.1.3-SNAPSHOT",
-        "start-order": 20
+      "id": "io.wcm.caravan/io.wcm.caravan.jaxws.consumer/1.1.3-SNAPSHOT",
+      "start-order": 20
     },
     {
-        "id": "io.wcm.caravan/io.wcm.caravan.jaxws.publisher/1.0.3-SNAPSHOT",
-        "start-order": 20
+      "id": "io.wcm.caravan/io.wcm.caravan.jaxws.publisher/1.0.3-SNAPSHOT",
+      "start-order": 20
     },
     {
-        "id": "io.wcm.caravan/io.wcm.caravan.jaxws.integration-test.helloworld-proxy/1-SNAPSHOT",
-        "start-order": 20
+      "id": "io.wcm.caravan/io.wcm.caravan.jaxws.integration-test.helloworld-proxy/1-SNAPSHOT",
+      "start-order": 20
     },
     {
-        "id": "io.wcm.caravan/io.wcm.caravan.jaxws.integration-test.helloworld-publisher/1-SNAPSHOT",
-        "start-order": 20
+      "id": "io.wcm.caravan/io.wcm.caravan.jaxws.integration-test.helloworld-publisher/1-SNAPSHOT",
+      "start-order": 20
     },
     {
-        "id": "io.wcm.caravan/io.wcm.caravan.jaxws.integration-test.helloworld-consumer/1-SNAPSHOT",
-        "start-order": 20
+      "id": "io.wcm.caravan/io.wcm.caravan.jaxws.integration-test.helloworld-consumer/1-SNAPSHOT",
+      "start-order": 20
     }
-  ]
+  ],
+  "configurations": {
+    "io.wcm.caravan.jaxws.integrationtest.helloworld.consumer.HelloWorldConsumer": {
+      "serverUrl": "http://localhost:${http.port}"
+    }
+  }
 }

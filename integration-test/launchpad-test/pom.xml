@@ -47,7 +47,6 @@
     <sling.starter.version>14-SNAPSHOT</sling.starter.version>
 
     <!-- start with -DkeepITServerRunning=true to allow to rerun ITs or inspect the server after the ITs have been executed there -->
-    <keepITServerRunning>false</keepITServerRunning>
     <starter.min.bundles.count>200</starter.min.bundles.count>
     <it.startTimeoutSeconds>60</it.startTimeoutSeconds>
   </properties>
@@ -180,14 +179,14 @@
         <executions>
           <!-- Find free ports to run our server -->
           <execution>
-            <id>reserve-server-port</id>
+            <id>reserve-network-port</id>
             <goals>
               <goal>reserve-network-port</goal>
             </goals>
-            <phase>pre-integration-test</phase>
+            <phase>initialize</phase>
             <configuration>
               <portNames>
-                <!-- reserved port must be stored in property because it must be passed to the slingstart-maven-plugin -->
+                <!-- reserved port must be stored in property because it must be passed to the feature-launcher-maven-plugin -->
                 <portName>http.port</portName>
               </portNames>
             </configuration>
@@ -208,6 +207,9 @@
             <aggregate>
               <classifier>app</classifier>
               <filesInclude>*.json</filesInclude>
+              <variablesOverrides>
+                <http.port>${http.port}</http.port>
+              </variablesOverrides>
               <includeArtifact>
                 <groupId>org.apache.sling</groupId>
                 <artifactId>org.apache.sling.starter</artifactId>
@@ -294,9 +296,6 @@
       <plugin>
         <artifactId>maven-failsafe-plugin</artifactId>
         <configuration>
-          <excludes>
-            <exclude>${failsafe.exclude}</exclude>
-          </excludes>
           <systemPropertyVariables>
             <launchpad.http.server.url>http://localhost:${http.port}/</launchpad.http.server.url>
             <starter.http.test.ports>false:${http.port}</starter.http.test.ports>
